@@ -14,20 +14,21 @@
                 <div class="d-flex flex-column">
                     <div class="p-2">
                         <label>ชื่อผู้ใช้งาน</label>
-                        <input class="form-control" [(ngModel)]="name">
+                        <input class="form-control" [(ngModel)]="name" placeholder="ชื่อผู้ใช้งาน">
                     </div>
 
                     <div class="p-2">
                         <label>รหัสผ่าน</label>
-                        <input type="password" class="form-control" [(ngModel)]="password">
+                        <input type="password" class="form-control" [(ngModel)]="password" placeholder="รหัสผ่าน">
                     </div>
 
                     <div class="p-2" *ngIf="isInvalid">
                         <label class="text-danger">ผู้ใช้งานหรือรหัสไม่ถูกต้อง</label>
                     </div>
 
+
                     <div class="p-2">
-                        <button class="btn btn-primary" (click)="login()">
+                        <button type="button" class="btn btn-primary" (click)="login()">
                             <em class="fa fa-key"></em>
                             เข้าสู่ระบบ
                         </button>

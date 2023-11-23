@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Issue, IssueService } from 'src/app/services/issue.service';
 import { Router } from '@angular/router';
+import { Application } from 'src/app/services/application.service';
 
 declare interface DataTable {
   headerRow: string[];
@@ -21,6 +22,7 @@ export class ProceedingIssueComponent implements OnInit {
 
     public issues: Issue[] = [];
     public issue: Issue = <Issue>{};
+    public application: Application=<Application>{};
 
     constructor(
       private readonly _issueServ: IssueService,
@@ -102,7 +104,10 @@ export class ProceedingIssueComponent implements OnInit {
     }
 
     search() {
-      this._issueServ.findProceeding().subscribe(s => {
+      let value = localStorage.getItem('application');
+      this.application = value === null ? <Application>{} : JSON.parse(value);
+
+      this._issueServ.findProceeding(this.application.currentIssueType).subscribe(s => {
         this.issues = s;
         this.refreshTable();
       });

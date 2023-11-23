@@ -5,6 +5,8 @@ import { Department, DepartmentService } from 'src/app/services/department.servi
 import { Group, GroupService } from 'src/app/services/group.service';
 import { Equipment, EquipmentService } from 'src/app/services/equipment.service';
 import { Category, CategoryService } from 'src/app/services/category.service';
+import { Application } from 'src/app/services/application.service';
+import { AppComponent } from 'src/app/app.component';
 
 declare interface DataTable {
     headerRow: string[];
@@ -48,6 +50,8 @@ export class NewIssueComponent implements OnInit {
 	public equipments: Equipment[] = [];
 	public equipmentRef: number = 0;
 
+	public application: Application=<Application>{};
+
 	constructor(
 		private readonly router: Router,
 		private readonly _issueServ: IssueService,
@@ -73,6 +77,9 @@ export class NewIssueComponent implements OnInit {
 				this.categories = s;
 			}
 		});
+
+		this.application.currentIssueType = 1;
+		localStorage.setItem('application', JSON.stringify(this.application));
 
 		this.newIssue();
 	}
@@ -155,8 +162,10 @@ export class NewIssueComponent implements OnInit {
 
 	search() {
 		this.issues = [];
+		let value = localStorage.getItem('application');	
+		this.application = value === null ? <Application>{} : JSON.parse(value);
 
-		this._issueServ.findProceeding().subscribe(s => {
+		this._issueServ.findProceeding(this.application.currentIssueType).subscribe(s => {
 			if(s) {
 				this.issues=s;
 			}
@@ -166,9 +175,12 @@ export class NewIssueComponent implements OnInit {
 	}
 
 	newIssue() {
+		let value = localStorage.getItem('application');	
+		this.application = value === null ? <Application>{} : JSON.parse(value);
+
 		this.issue = <Issue> {};
 		this.issue.id = 0;
-		this.issue.type = 1;
+		this.issue.type = this.application.currentIssueType;
 		this.issue.created = new Date();
 		this.issue.code = '';
 	}
@@ -207,6 +219,10 @@ export class NewIssueComponent implements OnInit {
 	}
 
 	save() {
+		let value = localStorage.getItem('application');	
+		this.application = value === null ? <Application>{} : JSON.parse(value);
+		this.issue.type = this.application.currentIssueType;
+
 		this.issue.department = this.depts.find(s => s.id === this.deptRef)
 		this.issue.equipment = this.equipments.find(s => s.id === this.equipmentRef);
 		this.issue.category = this.categories.find(s => s.id == this.categoryRef);
@@ -215,6 +231,9 @@ export class NewIssueComponent implements OnInit {
 		if(this.issue.id == 0) {
 			this.issue.created = new Date();
 		}
+
+		console.log(this.issue);
+
 
 		this._issueServ.save(this.issue).subscribe(s => {
 			if(s) {

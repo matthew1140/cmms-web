@@ -21,24 +21,36 @@ export class IssueService {
     return this._http.get<Issue[]>(`${URLAPI}/issue`);
   }
 
-  findNewToday(): Observable<Issue[]> {
-    return this._http.get<Issue[]>(`${URLAPI}/issue/new-today`);
+  findNewToday(type: number): Observable<Issue[]> {
+    return this._http.get<Issue[]>(`${URLAPI}/issue/new-today/${type}`);
   }
 
-  findProceeding(): Observable<Issue[]> {
-    return this._http.get<Issue[]>(`${URLAPI}/issue/proceeding`);
+  findProceeding(type: number): Observable<Issue[]> {
+    return this._http.get<Issue[]>(`${URLAPI}/issue/proceeding/:type`);
+  }
+
+  findProceedingByDate(type: number, frmDate: string, toDate: string): Observable<Issue[]> {
+    return this._http.get<Issue[]>(`${URLAPI}/issue/proceeding/${type}/${frmDate}/${toDate}`);
   }
 
   findWaitForClose(): Observable<Issue[]> {
     return this._http.get<Issue[]>(`${URLAPI}/issue/wait-for-close`);
   }
 
-  findCompleted(): Observable<Issue[]> {
-    return this._http.get<Issue[]>(`${URLAPI}/issue/completed`);
+  findCompleted(type: number): Observable<Issue[]> {
+    return this._http.get<Issue[]>(`${URLAPI}/issue/completed/${type}`);
   }
 
-  findCancelled(): Observable<Issue[]> {
-    return this._http.get<Issue[]>(`${URLAPI}/issue/cancelled`);
+  findCompletedByDate(type: number, frmDate: string, toDate: string): Observable<Issue[]> {
+    return this._http.get<Issue[]>(`${URLAPI}/issue/completed/${type}/${frmDate}/${toDate}`);
+  }
+
+  findCancelled(type: number): Observable<Issue[]> {
+    return this._http.get<Issue[]>(`${URLAPI}/issue/cancelled/${type}`);
+  }
+
+  findCancelledByDate(type: number, frmDate: string, toDate: string): Observable<Issue[]> {
+    return this._http.get<Issue[]>(`${URLAPI}/issue/cancelled/${type}/${frmDate}/${toDate}`);
   }
 
   findOne(id: number): Observable<Issue> {

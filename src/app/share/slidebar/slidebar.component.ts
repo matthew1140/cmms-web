@@ -1,5 +1,6 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { User } from '../../services/user.service';
+import { Application } from '../../services/application.service'
 
 declare let $: any;
 
@@ -13,6 +14,9 @@ export class SlidebarComponent implements OnInit, AfterViewInit {
   public user: User=<User>{};
   public fullName: string='';
   public jobType: number=1;
+
+  public application: Application = <Application>{};
+
   constructor() {
     let struser = localStorage.getItem('user');
 
@@ -23,8 +27,6 @@ export class SlidebarComponent implements OnInit, AfterViewInit {
     } else {
       this.fullName='';
     }
-
-    console.log(this.user.role);
    }
 
   ngOnInit(): void {
@@ -39,6 +41,8 @@ export class SlidebarComponent implements OnInit, AfterViewInit {
   }
 
   changeJobType() {
+    this.application.currentIssueType = this.jobType;
 
+    localStorage.setItem('application', JSON.stringify(this.application))
   }
 }

@@ -28,8 +28,8 @@ export class AdminWaitForCloseComponent implements OnInit, AfterViewInit {
       private readonly _router: Router) { 
 
       this.dataTable = {
-        headerRow: ['วันที่', 'เลขที่รับเรื่อง', 'ประเภทงาน', 'อุปกรณ์', 'ชื่อผู้แจ้ง', 'โทรศัพท์ติดต่อ' ],
-        footerRow: ['วันที่', 'เลขที่รับเรื่อง', 'ประเภทงาน', 'อุปกรณ์', 'ชื่อผู้แจ้ง', 'โทรศัพท์ติดต่อ' ],
+        headerRow: ['วันที่', 'เลขที่รับเรื่อง', 'ผู้แจ้ง', 'ประเภทงาน', 'อุปกรณ์', 'อาการเสีย' ],
+        footerRow: ['วันที่', 'เลขที่รับเรื่อง', 'ผู้แจ้ง', 'ประเภทงาน', 'อุปกรณ์', 'อาการเสีย' ],
         dataRows: [],
       };
     }
@@ -49,8 +49,8 @@ export class AdminWaitForCloseComponent implements OnInit, AfterViewInit {
         dom: 'Bfrtip',
         buttons: ['copy', 'csv', 'excel', 'print'],
         columnDefs: [
-          { target: [0, 1], width: '10em', className: 'text-center' },
-          { target: [2, 3, 5], width: '15em' },
+          { target: [0, 1, 2], width: '10em', className: 'text-center' },
+          { target: [3, 4], width: '15em' },
         ],
         responsive: true,
         language: {
@@ -90,10 +90,10 @@ export class AdminWaitForCloseComponent implements OnInit, AfterViewInit {
           this.data.push([
             created.toLocaleDateString(),
             s.code,
+            s.caller,
             s.equipment?.group == undefined ? '' : s.equipment.group.name,
             s.equipment == undefined ? '' : s.equipment.name,
-            s.caller,
-            s.phoneno,
+            s.description,
           ]);
         });
       }

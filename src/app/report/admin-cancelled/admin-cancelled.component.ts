@@ -1,6 +1,6 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { Issue, IssueService } from 'src/app/services/issue.service';
-
+import { Application } from 'src/app/services/application.service';
 declare interface DataTable {
   headerRow: string[];
   footerRow: string[];
@@ -22,10 +22,15 @@ export class AdminCancelledComponent implements OnInit, AfterViewInit {
     public issues: Issue[] = [];
     public issue: Issue = <Issue>{};
 
+    public frmDate: string = new Date().toISOString().split('T')[0];
+    public toDate: string = new Date().toISOString().split('T')[0];
+
+    public application: Application=<Application>{};
+
     constructor(private readonly _issueServ: IssueService) { 
       this.dataTable = {
-        headerRow: ['วันที่', 'เลขที่รับเรื่อง', 'ประเภทงาน', 'อุปกรณ์', 'ชื่อผู้แจ้ง', 'โทรศัพท์ติดต่อ' ],
-        footerRow: ['วันที่', 'เลขที่รับเรื่อง', 'ประเภทงาน', 'อุปกรณ์', 'ชื่อผู้แจ้ง', 'โทรศัพท์ติดต่อ' ],
+        headerRow: ['วันที่', 'เลขที่รับเรื่อง', 'ผู้แจ้ง', 'ประเภทงาน', 'อุปกรณ์', 'อาการเสีย' ],
+        footerRow: ['วันที่', 'เลขที่รับเรื่อง', 'ผู้แจ้ง', 'ประเภทงาน', 'อุปกรณ์', 'อาการเสีย' ],
         dataRows: [],
       };
     }
@@ -45,8 +50,8 @@ export class AdminCancelledComponent implements OnInit, AfterViewInit {
         dom: 'Bfrtip',
         buttons: ['copy', 'csv', 'excel', 'print'],
         columnDefs: [
-          { target: [0, 1], width: '10em', className: 'text-center' },
-          { target: [2, 3, 5], width: '15em' },
+          { target: [0, 1, 2], width: '10em', className: 'text-center' },
+          { target: [3, 5], width: '15em' },
         ],
         responsive: true,
         language: {
@@ -99,7 +104,20 @@ export class AdminCancelledComponent implements OnInit, AfterViewInit {
     }
 
     search() {
-      this._issueServ.findCancelled().subscribe(s => {
+      let value = localStorage.getItem('application');
+      this.application = value === null ? <Application>{} : JSON.parse(value);
+
+      this._issueServ.findCancelled(this.application.currentIssueType).subscribe(s => {
+        this.issues = s;
+        this.refreshTable();
+      });
+    }
+
+    generate() {
+      let value = localStorage.getItem('application');
+      this.application = value === null ? <Application>{} : JSON.parse(value);
+
+      this._issueServ.findCancelledByDate(this.application.currentIssueType, this.frmDate, this.toDate).subscribe(s => {
         this.issues = s;
         this.refreshTable();
       });

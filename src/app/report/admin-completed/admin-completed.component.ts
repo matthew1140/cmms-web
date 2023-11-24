@@ -92,7 +92,7 @@ export class AdminCompletedComponent implements OnInit, AfterViewInit {
 
       if(this.issues) {
         this.issues.forEach(s => {
-          var created = new Date(String(s.created));
+          var created = new Date(String(s.finishedDate));
 
           this.data.push([
             created.toLocaleDateString(),

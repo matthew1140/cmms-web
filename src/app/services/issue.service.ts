@@ -26,7 +26,7 @@ export class IssueService {
   }
 
   findProceeding(type: number): Observable<Issue[]> {
-    return this._http.get<Issue[]>(`${URLAPI}/issue/proceeding/:type`);
+    return this._http.get<Issue[]>(`${URLAPI}/issue/proceeding/${type}`);
   }
 
   findProceedingByDate(type: number, frmDate: string, toDate: string): Observable<Issue[]> {

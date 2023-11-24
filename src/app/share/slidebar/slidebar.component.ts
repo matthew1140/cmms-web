@@ -13,7 +13,7 @@ export class SlidebarComponent implements OnInit, AfterViewInit {
 
   public user: User=<User>{};
   public fullName: string='';
-  public jobType: number=1;
+  public jobType: number=0;
 
   public application: Application = <Application>{};
 
@@ -30,6 +30,16 @@ export class SlidebarComponent implements OnInit, AfterViewInit {
    }
 
   ngOnInit(): void {
+    let value = localStorage.getItem('application');
+    
+    if(value != null) {
+      this.application = JSON.parse(value);
+      this.jobType = this.application.currentIssueType;
+
+    } else {
+      this.jobType = 1;
+    }
+
   }
 
   ngAfterViewInit(): void {
@@ -37,12 +47,12 @@ export class SlidebarComponent implements OnInit, AfterViewInit {
         $('#nav-menu li a').removeClass('active');
         $(this).addClass('active');
     });
-
   }
 
   changeJobType() {
     this.application.currentIssueType = this.jobType;
-
     localStorage.setItem('application', JSON.stringify(this.application))
+
+    location.reload();
   }
 }

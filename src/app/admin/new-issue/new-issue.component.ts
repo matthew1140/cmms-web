@@ -78,9 +78,6 @@ export class NewIssueComponent implements OnInit {
 			}
 		});
 
-		this.application.currentIssueType = 1;
-		localStorage.setItem('application', JSON.stringify(this.application));
-
 		this.newIssue();
 	}
 
@@ -180,7 +177,13 @@ export class NewIssueComponent implements OnInit {
 
 		this.issue = <Issue> {};
 		this.issue.id = 0;
-		this.issue.type = this.application.currentIssueType;
+
+		if(this.application.currentIssueType === 1 || this.application.currentIssueType ===2) {
+			this.issue.type = this.application.currentIssueType;
+		} else {
+			this.issue.type = 1;
+		}
+
 		this.issue.created = new Date();
 		this.issue.code = '';
 	}
@@ -231,9 +234,6 @@ export class NewIssueComponent implements OnInit {
 		if(this.issue.id == 0) {
 			this.issue.created = new Date();
 		}
-
-		console.log(this.issue);
-
 
 		this._issueServ.save(this.issue).subscribe(s => {
 			if(s) {

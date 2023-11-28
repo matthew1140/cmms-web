@@ -249,7 +249,7 @@ export class EditIssueComponent implements OnInit {
       this.issue.department = this.depts.find(s => s.id === this.deptRef)
       this.issue.equipment = this.equipments.find(s => s.id === this.equipmentRef);
       this.issue.tech = this.techs.find(s => s.id === this.techRef);
-      this.issue.status = this.issue.tech == undefined ? 1 : this.issue.tech.id > 0 ? 2 : 1;
+      this.issue.status = this.issue.techname == '' ? 1 : 2;
       this.issue.lastModifiedDate = new Date();
       this.issue.finishedDate = new Date('0000-00-00 00:00:00');
 
@@ -258,6 +258,8 @@ export class EditIssueComponent implements OnInit {
           this._partServ.save(s).subscribe(r => {});       
         });
       });
+
+      console.log(this.issue);
 
       this._issueServ.save(this.issue).subscribe(s => {
         if(s) {

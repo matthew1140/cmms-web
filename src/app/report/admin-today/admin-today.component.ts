@@ -51,8 +51,9 @@ export class AdminTodayComponent implements OnInit, AfterViewInit {
         dom: 'Bfrtip',
         buttons: ['copy', 'csv', 'excel', 'print'],
         columnDefs: [
-          { target: [0, 1, 2], width: '10em', className: 'text-center' },
-          { target: [3, 4], width: '15em' },
+          { target: [1], width: '10em', className: 'text-center' },
+          { target: [0, 2], width: '8em', className: 'text-center' },
+          { target: [3, 4], width: '10em' },
         ],
         responsive: true,
         language: {
@@ -90,9 +91,12 @@ export class AdminTodayComponent implements OnInit, AfterViewInit {
       if(this.issues) {
         this.issues.forEach(s => {
           var created = new Date(String(s.created));
+          var year = created.getFullYear()+543;
+          var month = created.getMonth() + 1;
+          var date = created.getDate();
 
           this.data.push([
-            created.toLocaleDateString(),
+            `${year}-${month}-${date}`,
             s.code,
             s.caller,
             s.equipment?.group == undefined ? '' : s.equipment.group.name,

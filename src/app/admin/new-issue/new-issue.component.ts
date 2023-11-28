@@ -229,6 +229,8 @@ export class NewIssueComponent implements OnInit {
 		this.issue.department = this.depts.find(s => s.id === this.deptRef)
 		this.issue.equipment = this.equipments.find(s => s.id === this.equipmentRef);
 		this.issue.category = this.categories.find(s => s.id == this.categoryRef);
+		this.issue.building = this.issue.building == undefined ? '' : this.issue.building;
+		this.issue.floor = this.issue.floor == undefined ? '' : this.issue.floor;
 		this.issue.status = 1;
 		
 		if(this.issue.id == 0) {
@@ -253,13 +255,13 @@ export class NewIssueComponent implements OnInit {
 	      ['/page/prn-issue'], 
 	      { 
 	        queryParams: {
-				created: created.toLocaleDateString(),
-				time: created.getHours() + ":" + created.getHours() + ":" + created.getSeconds(),
+				created: created.getDate() + '/' + (created.getMonth() + 1) + '/' + created.getFullYear(),
+				time: created.getHours() + ":" + created.getMinutes() + ":" + created.getSeconds(),
 				code: this.issue.code,
 				type: type,
 				group: this.groups.find(s => s.id === this.groupRef)?.code,
 				category: this.issue.category?.code,
-				caller: this.issue.caller,
+				caller: `${this.issue.caller} อาคาร: ${this.issue.building} ชั้น: ${this.issue.floor}`,
 				phoneno: this.issue.phoneno,
 				department: this.issue.department?.name,
 				location: this.issue.location,

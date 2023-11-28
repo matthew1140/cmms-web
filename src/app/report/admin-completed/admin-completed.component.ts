@@ -35,8 +35,8 @@ export class AdminCompletedComponent implements OnInit, AfterViewInit {
       private readonly _router: Router) { 
 
       this.dataTable = {
-        headerRow: ['วันที่', 'เลขที่รับเรื่อง', 'ผู้แจ้ง', 'ประเภทงาน', 'อุปกรณ์', 'อาการ', 'การแก้ไข' ],
-        footerRow: ['วันที่', 'เลขที่รับเรื่อง', 'ผู้แจ้ง', 'ประเภทงาน', 'อุปกรณ์', 'อาการ', 'การแก้ไข' ],
+        headerRow: ['วันที่รับเรื่อง', 'วันที่เสร็จ', 'เลขที่รับเรื่อง', 'ผู้แจ้ง', 'ประเภทงาน', 'อุปกรณ์', 'อาการ', 'การแก้ไข' ],
+        footerRow: ['วันที่รับเรื่อง', 'วันที่เสร็จ', 'เลขที่รับเรื่อง', 'ผู้แจ้ง', 'ประเภทงาน', 'อุปกรณ์', 'อาการ', 'การแก้ไข' ],
         dataRows: [],
       };
     }
@@ -54,10 +54,31 @@ export class AdminCompletedComponent implements OnInit, AfterViewInit {
 
       let table = $('#admin-completed-table').DataTable({
         dom: 'Bfrtip',
-        buttons: ['copy', 'csv', 'excel', 'print'],
+        buttons: ['copy', 'csv', 'excel', { 
+          extend: 'print',
+          title: '',
+          messageTop:     function() {
+                            return `
+                            <div>เรียน หบค./ชบค.</div>
+                            <div>เรื่อง แจ้งผลการรับแจ้งและผลการตรวจซ่อมที่แล้วเสร็จ<div>
+                            <div style="margin-top: 1em; margin-left: 4em">ประจำวันที่ ${self.getToday().getDate()}/${self.getToday().getMonth() + 1}/${self.getToday().getFullYear()+543} ดังนี้</div>
+                            <p>
+                            `
+                          },
+          messageBottom:  function() {
+                            return `
+                            <div style="margin-top: 4em; text-align: center">
+                              <div>จึงเรียนมาเพื่อโปรดทราบ</div>
+                              <div style="margin-top: 3em">(.........................................)</div>
+                              <div>ช่างเทคนิค 4</div>
+                              <div>.........../.........../...........</div>
+                            </div>`
+                          }
+        }],
         columnDefs: [
-          { target: [0, 1, 2], width: '10em', className: 'text-center' },
-          { target: [2, 3], width: '15em' },
+          { target: [0, 1, 3], width: '6em', className: 'text-center' },
+          { target: [2], width: '8em', className: 'text-center' },
+          { target: [4,5], width: '10em' },
         ],
         responsive: true,
         language: {
@@ -92,10 +113,19 @@ export class AdminCompletedComponent implements OnInit, AfterViewInit {
 
       if(this.issues) {
         this.issues.forEach(s => {
-          var created = new Date(String(s.finishedDate));
+          var created = new Date(String(s.created));
+          var cyear = created.getFullYear()+543;
+          var cmonth = created.getMonth() + 1;
+          var cdate = created.getDate();
+
+          var finishdate = new Date(String(s.finishedDate));
+          var year = finishdate.getFullYear()+543;
+          var month = finishdate.getMonth() + 1;
+          var date = finishdate.getDate();
 
           this.data.push([
-            created.toLocaleDateString(),
+            `${cyear}-${cmonth}-${cdate}`,
+            `${year}-${month}-${date}`,
             s.code,
             s.caller,
             s.equipment?.group == undefined ? '' : s.equipment.group.name,
@@ -148,5 +178,10 @@ export class AdminCompletedComponent implements OnInit, AfterViewInit {
 
     close() {
       $('#issue-modal').modal('hide');
+    }
+
+    getToday() {
+      let today = new Date()
+      return today;
     }
 }

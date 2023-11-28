@@ -118,10 +118,7 @@
     <div class="d-flex flex-row mt-3 mb-2">
         <div class="form-group">
             <label>ช่างที่รับผิดชอบ</label>
-            <select class="form-select" [(ngModel)]="techRef">
-                <option [ngValue]="0">- เลือก -</option>
-                <option *ngFor="let opt of techs" [ngValue]="opt.id" >{{opt.firstname + ' ' + opt.lastname}}</option>
-            </select>
+            <input class="form-control" style="width: 30em;" [(ngModel)]="issue.techname">
         </div>
     </div>
 

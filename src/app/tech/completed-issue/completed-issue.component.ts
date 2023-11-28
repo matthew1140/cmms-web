@@ -26,8 +26,8 @@ export class CompletedIssueComponent implements OnInit {
 
     constructor(private readonly _issueServ: IssueService) { 
       this.dataTable = {
-        headerRow: ['วันที่', 'เลขที่รับเรื่อง', 'ประเภทงาน', 'อุปกรณ์', 'ชื่อผู้แจ้ง', 'โทรศัพท์ติดต่อ' ],
-        footerRow: ['วันที่', 'เลขที่รับเรื่อง', 'ประเภทงาน', 'อุปกรณ์', 'ชื่อผู้แจ้ง', 'โทรศัพท์ติดต่อ' ],
+        headerRow: ['วันที่รับเรื่อง', 'วันที่เสร็จ', 'เลขที่รับเรื่อง', 'ผู้แจ้ง', 'ประเภทงาน', 'อุปกรณ์', 'อาการเสีย', 'การแก้ไข' ],
+        footerRow: ['วันที่รับเรื่อง', 'วันที่เสร็จ', 'เลขที่รับเรื่อง', 'ผู้แจ้ง', 'ประเภทงาน', 'อุปกรณ์', 'อาการเสีย', 'การแก้ไข' ],
         dataRows: [],
       };
     }
@@ -45,10 +45,31 @@ export class CompletedIssueComponent implements OnInit {
 
       let table = $('#admin-completed-table').DataTable({
         dom: 'Bfrtip',
-        buttons: ['copy', 'csv', 'excel', 'print'],
+        buttons: ['copy', 'csv', 'excel', { 
+          extend: 'print',
+          title: '',
+          messageTop:     function() {
+                            return `
+                            <div>เรียน หบค./ชบค.</div>
+                            <div>เรื่อง แจ้งผลการรับแจ้งและผลการตรวจซ่อมที่แล้วเสร็จ<div>
+                            <div style="margin-top: 1em; margin-left: 4em">ประจำวันที่ ${self.getToday().getDate()}/${self.getToday().getMonth() + 1}/${self.getToday().getFullYear()+543} ดังนี้</div>
+                            <p>
+                            `
+                          },
+          messageBottom:  function() {
+                            return `
+                            <div style="margin-top: 4em; text-align: center">
+                              <div>จึงเรียนมาเพื่อโปรดทราบ</div>
+                              <div style="margin-top: 3em">(.........................................)</div>
+                              <div>ช่างเทคนิค 4</div>
+                              <div>.........../.........../...........</div>
+                            </div>`
+                          }
+        }],
         columnDefs: [
-          { target: [0, 1], width: '10em', className: 'text-center' },
-          { target: [2, 3, 5], width: '15em' },
+          { target: [0, 1,3], width: '6em', className: 'text-center' },
+          { target: [2], width: '8em', className: 'text-center' },
+          { target: [4,5], width: '10em' },
         ],
         responsive: true,
         language: {
@@ -84,14 +105,24 @@ export class CompletedIssueComponent implements OnInit {
       if(this.issues) {
         this.issues.forEach(s => {
           var created = new Date(String(s.created));
+          var cyear = created.getFullYear()+543;
+          var cmonth = created.getMonth() + 1;
+          var cdate = created.getDate();
+
+          var finish = new Date(String(s.finishedDate));
+          var year = finish.getFullYear()+543;
+          var month = finish.getMonth() + 1;
+          var date = finish.getDate();
 
           this.data.push([
-            created.toLocaleDateString(),
+            `${cyear}-${cmonth}-${cdate}`,
+            `${year}-${month}-${date}`,
             s.code,
+            s.caller,
             s.equipment?.group == undefined ? '' : s.equipment.group.name,
             s.equipment == undefined ? '' : s.equipment.name,
-            s.caller,
-            s.phoneno,
+            s.description,
+            s.solution,
           ]);
         });
       }
@@ -128,5 +159,10 @@ export class CompletedIssueComponent implements OnInit {
 
     close() {
       $('#issue-modal').modal('hide');
+    }
+
+    getToday() {
+      let today = new Date()
+      return today;
     }
 }

@@ -45,7 +45,7 @@ export class AdminProceedingComponent implements OnInit, AfterViewInit {
 
     ngAfterViewInit(): void {
       this.initTable();
-      this.generate();
+      this.search();
     }
 
     initTable() {
@@ -53,10 +53,31 @@ export class AdminProceedingComponent implements OnInit, AfterViewInit {
 
       let table = $('#admin-proceeding-table').DataTable({
         dom: 'Bfrtip',
-        buttons: ['copy', 'csv', 'excel', 'print'],
+        buttons: ['copy', 'csv', 'excel', {
+          extend: 'print',
+          title: '',
+          messageTop:     function() {
+                            return `
+                            <div>เรียน </div>
+                            <div>เรื่อง แจ้งผลการรับแจ้งและผลการตรวจซ่อมที่อยู่ระหว่างดำเนินการ<div>
+                            <div style="margin-top: 1em; margin-left: 4em">ประจำวันที่ ${self.getToday().getDate()}/${self.getToday().getMonth() + 1}/${self.getToday().getFullYear()+543} ดังนี้</div>
+                            <p>
+                            `
+                          },
+          messageBottom:  function() {
+                            return `
+                            <div style="margin-top: 4em; text-align: center">
+                              <div>จึงเรียนมาเพื่อโปรดทราบ</div>
+                              <div style="margin-top: 3em">(.........................................)</div>
+                              <div>ช่างเทคนิค</div>
+                              <div>.........../.........../...........</div>
+                            </div>`
+                          }
+        }],
         columnDefs: [
-          { target: [0, 1, 2], width: '10em', className: 'text-center' },
-          { target: [3, 4], width: '15em' },
+          { target: [1], width: '8em', className: 'text-center' },
+          { target: [0, 2], width: '6em', className: 'text-center' },
+          { target: [3, 4], width: '10em' },
         ],
         responsive: true,
         language: {
@@ -92,9 +113,12 @@ export class AdminProceedingComponent implements OnInit, AfterViewInit {
       if(this.issues) {
         this.issues.forEach(s => {
           var created = new Date(String(s.created));
+          var year = created.getFullYear()+543;
+          var month = created.getMonth() + 1;
+          var date = created.getDate();
 
           this.data.push([
-            created.toLocaleDateString(),
+            `${year}-${month}-${date}`,
             s.code,
             s.caller,
             s.equipment?.group == undefined ? '' : s.equipment.group.name,
@@ -146,5 +170,10 @@ export class AdminProceedingComponent implements OnInit, AfterViewInit {
 
     close() {
       $('#issue-modal').modal('hide');
+    }
+
+    getToday() {
+      let today = new Date()
+      return today;
     }
 }

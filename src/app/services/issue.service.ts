@@ -85,6 +85,7 @@ export interface Issue {
     solution: string;
 //    parts?: Part[];
     tech?: User;
+    techname?: string;
     satisfication?: number;
     lastModifiedDate?: Date;
     finishedDate?: Date;

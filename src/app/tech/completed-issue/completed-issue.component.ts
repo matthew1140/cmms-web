@@ -24,6 +24,9 @@ export class CompletedIssueComponent implements OnInit {
 
     public application: Application=<Application>{};
 
+    public frmDate: string = new Date().toISOString().split('T')[0];
+    public toDate: string = new Date().toISOString().split('T')[0];
+
     constructor(private readonly _issueServ: IssueService) { 
       this.dataTable = {
         headerRow: ['วันที่รับเรื่อง', 'วันที่เสร็จ', 'เลขที่รับเรื่อง', 'ผู้แจ้ง', 'ประเภทงาน', 'อุปกรณ์', 'อาการเสีย', 'การแก้ไข' ],
@@ -136,6 +139,16 @@ export class CompletedIssueComponent implements OnInit {
       this.application = value === null ? <Application>{} : JSON.parse(value);
 
       this._issueServ.findCompleted(this.application.currentIssueType).subscribe(s => {
+        this.issues = s;
+        this.refreshTable();
+      });
+    }
+
+    generate() {
+      let value = localStorage.getItem('application');
+      this.application = value === null ? <Application>{} : JSON.parse(value); 
+
+      this._issueServ.findCompletedByDate(this.application.currentIssueType, this.frmDate, this.toDate).subscribe(s => {
         this.issues = s;
         this.refreshTable();
       });

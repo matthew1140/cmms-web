@@ -29,8 +29,8 @@ export class WaitForCloseComponent implements OnInit, AfterViewInit {
       private readonly _router: Router) { 
 
       this.dataTable = {
-        headerRow: ['วันที่', 'เลขที่รับเรื่อง', 'ผู้แจ้ง', 'ประเภทงาน', 'อุปกรณ์', 'อาการเสีย' ],
-        footerRow: ['วันที่', 'เลขที่รับเรื่อง', 'ผู้แจ้ง', 'ประเภทงาน', 'อุปกรณ์', 'อาการเสีย' ],
+        headerRow: ['วันที่', 'เลขที่รับเรื่อง', 'ผู้แจ้ง', 'อาคาร', 'ชั้น', 'ที่อยู่', 'อุปกรณ์', 'อาการเสีย' ],
+        footerRow: ['วันที่', 'เลขที่รับเรื่อง', 'ผู้แจ้ง', 'อาคาร', 'ชั้น', 'ที่อยู่', 'อุปกรณ์', 'อาการเสีย' ],
         dataRows: [],
       };
     }
@@ -52,7 +52,7 @@ export class WaitForCloseComponent implements OnInit, AfterViewInit {
         columnDefs: [
           { target: [0, 1], width: '6em', className: 'text-center' },
           { target: [2], width: '8em', className: 'text-center' },
-          { target: [3,4], width: '10em' },
+          { target: [3,4,5], width: 'em' },
         ],
         responsive: true,
         language: {
@@ -95,7 +95,9 @@ export class WaitForCloseComponent implements OnInit, AfterViewInit {
           this.data.push([
             `${year}-${month}-${date}`,
             s.code,
-            s.equipment?.group == undefined ? '' : s.equipment.group.name,
+            s.building == undefined ? '' : s.building,
+            s.floor == undefined ? '' : s.floor,
+            s.location == undefined ? '' : s.location,
             s.equipment == undefined ? '' : s.equipment.name,
             s.caller,
             s.phoneno,

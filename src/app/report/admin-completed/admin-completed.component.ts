@@ -25,8 +25,10 @@ export class AdminCompletedComponent implements OnInit, AfterViewInit {
     public issues: Issue[] = [];
     public issue: Issue = <Issue>{};
 
-    public frmDate: string = new Date().toISOString().split('T')[0];
-    public toDate: string = new Date().toISOString().split('T')[0];
+    public today: Date = new Date();
+    public start: Date = new Date();
+    public frmDate: string;
+    public toDate: string
 
     public application: Application=<Application>{};
 
@@ -35,10 +37,15 @@ export class AdminCompletedComponent implements OnInit, AfterViewInit {
       private readonly _router: Router) { 
 
       this.dataTable = {
-        headerRow: ['วันที่รับเรื่อง', 'วันที่เสร็จ', 'เลขที่รับเรื่อง', 'ผู้แจ้ง', 'ประเภทงาน', 'อุปกรณ์', 'อาการ', 'การแก้ไข' ],
-        footerRow: ['วันที่รับเรื่อง', 'วันที่เสร็จ', 'เลขที่รับเรื่อง', 'ผู้แจ้ง', 'ประเภทงาน', 'อุปกรณ์', 'อาการ', 'การแก้ไข' ],
+        headerRow: ['วันที่รับเรื่อง', 'วันที่เสร็จ', 'เลขที่รับเรื่อง', 'ผู้แจ้ง', 'อาคาร', 'ชั้น', 'ที่อยู่', 'อุปกรณ์', 'อาการ', 'การแก้ไข', 'ผู้รับผิดชอบ' ],
+        footerRow: ['วันที่รับเรื่อง', 'วันที่เสร็จ', 'เลขที่รับเรื่อง', 'ผู้แจ้ง', 'อาคาร', 'ชั้น', 'ที่อยู่', 'อุปกรณ์', 'อาการ', 'การแก้ไข', 'ผู้รับผิดชอบ' ],
         dataRows: [],
       };
+
+      this.start.setMonth(this.today.getMonth() - 3);
+
+      this.frmDate = this.start.toISOString().split('T')[0];
+      this.toDate = this.today.toISOString().split('T')[0];
     }
 
     ngOnInit(): void {
@@ -78,7 +85,7 @@ export class AdminCompletedComponent implements OnInit, AfterViewInit {
         columnDefs: [
           { target: [0, 1, 3], width: '6em', className: 'text-center' },
           { target: [2], width: '8em', className: 'text-center' },
-          { target: [4,5], width: '10em' },
+          { target: [4,5,6], width: '6em' },
         ],
         responsive: true,
         language: {
@@ -128,10 +135,13 @@ export class AdminCompletedComponent implements OnInit, AfterViewInit {
             `${year}-${month}-${date}`,
             s.code,
             s.caller,
-            s.equipment?.group == undefined ? '' : s.equipment.group.name,
+            s.building == undefined ? '': s.building,
+            s.floor == undefined ? '' : s.floor,
+            s.location == undefined ? '' : s.location,
             s.equipment == undefined ? '' : s.equipment.name,
             s.description,
             s.solution,
+            s.techname == undefined ? '' : s.techname
           ]);
         });
       }

@@ -24,18 +24,25 @@ export class ProceedingIssueComponent implements OnInit {
     public issue: Issue = <Issue>{};
     public application: Application=<Application>{};
 
-    public frmDate: string = new Date().toISOString().split('T')[0];
-    public toDate: string = new Date().toISOString().split('T')[0];
+    public today: Date = new Date();
+    public start: Date = new Date();
+    public frmDate: string;
+    public toDate: string
 
     constructor(
       private readonly _issueServ: IssueService,
       private readonly _router: Router) { 
 
       this.dataTable = {
-        headerRow: ['วันที่', 'เลขที่รับเรื่อง', 'ผู้แจ้ง', 'ประเภทงาน', 'อุปกรณ์', 'อาการเสีย' ],
-        footerRow: ['วันที่', 'เลขที่รับเรื่อง', 'ผู้แจ้ง', 'ประเภทงาน', 'อุปกรณ์', 'อาการเสีย' ],
+        headerRow: ['วันที่', 'เลขที่รับเรื่อง', 'ผู้แจ้ง', 'อาคาร', 'ชั้น', 'ที่อยู่', 'อุปกรณ์', 'อาการเสีย' ],
+        footerRow: ['วันที่', 'เลขที่รับเรื่อง', 'ผู้แจ้ง', 'อาคาร', 'ชั้น', 'ที่อยู่', 'อุปกรณ์', 'อาการเสีย' ],
         dataRows: [],
       };
+
+      this.start.setMonth(this.today.getMonth() - 3);
+
+      this.frmDate = this.start.toISOString().split('T')[0];
+      this.toDate = this.today.toISOString().split('T')[0];
     }
 
     ngOnInit(): void {
@@ -43,7 +50,7 @@ export class ProceedingIssueComponent implements OnInit {
 
     ngAfterViewInit(): void {
       this.initTable();
-      this.search();
+      this.generate();
     }
 
     initTable() {
@@ -75,7 +82,7 @@ export class ProceedingIssueComponent implements OnInit {
         columnDefs: [
           { target: [1], width: '8em', className: 'text-center' },
           { target: [0, 2], width: '6em', className: 'text-center' },
-          { target: [3, 4], width: '10em' },
+          { target: [3, 4, 5], width: '6em' },
         ],
         responsive: true,
         language: {
@@ -119,7 +126,9 @@ export class ProceedingIssueComponent implements OnInit {
             `${year}-${month}-${date}`,
             s.code,
             s.caller,
-            s.equipment?.group == undefined ? '' : s.equipment.group.name,
+            s.building == undefined ? '' : s.building,
+            s.floor == undefined ? '' : s.floor,
+            s.location == undefined ? '' : s.location,
             s.equipment == undefined ? '' : s.equipment.name,
             s.description,
           ]);

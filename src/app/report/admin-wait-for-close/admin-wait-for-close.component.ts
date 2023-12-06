@@ -28,8 +28,8 @@ export class AdminWaitForCloseComponent implements OnInit, AfterViewInit {
       private readonly _router: Router) { 
 
       this.dataTable = {
-        headerRow: ['วันที่', 'เลขที่รับเรื่อง', 'ผู้แจ้ง', 'ประเภทงาน', 'อุปกรณ์', 'อาการเสีย' ],
-        footerRow: ['วันที่', 'เลขที่รับเรื่อง', 'ผู้แจ้ง', 'ประเภทงาน', 'อุปกรณ์', 'อาการเสีย' ],
+        headerRow: ['วันที่', 'เลขที่รับเรื่อง', 'ผู้แจ้ง', 'อาคาร', 'ชั้น', 'ที่อยู่', 'อุปกรณ์', 'อาการเสีย' ],
+        footerRow: ['วันที่', 'เลขที่รับเรื่อง', 'ผู้แจ้ง', 'อาคาร', 'ชั้น', 'ที่อยู่', 'อุปกรณ์', 'อาการเสีย' ],
         dataRows: [],
       };
     }
@@ -51,7 +51,7 @@ export class AdminWaitForCloseComponent implements OnInit, AfterViewInit {
         columnDefs: [
           { target: [1], width: '10em', className: 'text-center' },
           { target: [0, 2], width: '8em', className: 'text-center' },
-          { target: [3, 4], width: '10em' },
+          { target: [3, 4, 5], width: '6em' },
         ],
         responsive: true,
         language: {
@@ -95,7 +95,8 @@ export class AdminWaitForCloseComponent implements OnInit, AfterViewInit {
             `${year}-${month}-${date}`,
             s.code,
             s.caller,
-            s.equipment?.group == undefined ? '' : s.equipment.group.name,
+            s.building == undefined ? '' : s.building,
+            s.building == undefined ? '' : s.building,
             s.equipment == undefined ? '' : s.equipment.name,
             s.description,
           ]);

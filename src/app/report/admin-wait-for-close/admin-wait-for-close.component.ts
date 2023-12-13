@@ -96,7 +96,8 @@ export class AdminWaitForCloseComponent implements OnInit, AfterViewInit {
             s.code,
             s.caller,
             s.building == undefined ? '' : s.building,
-            s.building == undefined ? '' : s.building,
+            s.building == undefined ? '' : String(s.floor),
+            s.location == undefined ? '' : s.location,
             s.equipment == undefined ? '' : s.equipment.name,
             s.description,
           ]);
